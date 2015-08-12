@@ -291,4 +291,147 @@ print(secondForLoop)
 
 ### 函数和闭包
 
+使用`func`来声明一个函数。使用函数名和一组括号包围的参数来进行函数调用。使用`->`来分隔参数名，参数类型和函数的返回类型。
+
 */
+
+func greet(name: String, day: String) -> String {
+    return "Hello \(name), today is \(day)."
+}
+greet("bob", day:"Tuesday")
+
+/*
+
+> **实验**
+> 
+> 移除`day`参数。加入一个参数，以在问候语中包括今天午餐的特别菜式。
+
+*/
+
+/*:
+
+使用元组（tuple）创建一个复合类型值－－例如，从一个方法中返回多个值。元组的成员可以使用名字或数字索引来访问。
+
+*/
+
+func calculateStatistics(scores: [Int]) -> (min: Int, max: Int, sum: Int) {
+    var min = scores[0]
+    var max = scores[0]
+    var sum = 0
+
+    for score in scores {
+        if score > max {
+            max = score
+        } else if score < min {
+            min = score
+        }
+        sum += score
+    }
+
+    return (max, min, sum)
+}
+
+let statistics = calculateStatistics([5, 3, 100, 3, 9])
+print(statistics.sum)
+print(statistics.2)
+
+/*:
+
+函数也可以接受可变数量的参数，这些变量被收集到一个数组中。
+
+*/
+
+func sumOf(numbers: Int...) -> Int {
+    var sum = 0
+    for number in numbers {
+        sum += number
+    }
+    return sum
+}
+sumOf()
+sumOf(42, 597, 12)
+
+
+/*:
+
+> **实验**
+>
+> 编写一个能够计算其所有参数的平均值的函数。
+
+*/
+
+/*:
+
+函数可以嵌套。嵌套的函数可以访问外层函数的变量。你可以使用嵌套函数来组织冗长或复杂的函数的代码。
+
+*/
+
+func returnFifteen() -> Int {
+    var y = 10
+
+    func add() {
+        y += 5
+    }
+    add()
+    return y
+}
+
+returnFifteen()
+
+/*:
+
+函数是一等（first-class）类型。这意味着函数可以作为值，被另一个函数返回。
+
+*/
+
+func makeIncrementer() -> (Int -> Int) {
+    func addOne(number: Int) -> Int {
+        return 1 + number
+    }
+    return addOne
+}
+var increment = makeIncrementer()
+increment(7)
+
+/*:
+
+函数也可以把另一个函数作为其参数。
+
+*/
+
+func hasAnyMatch(list: [Int], condition: Int -> Bool) -> Bool {
+    for item in list {
+        if condition(item) {
+            return true
+        }
+    }
+    return false
+}
+func lessThanTen(number: Int) -> Bool {
+    return number < 10
+}
+var numbers = [20, 19, 7, 12]
+hasAnyMatch(numbers, condition: lessThanTen)
+
+/*:
+
+函数实际上是闭包的一种特殊形式：代码块可以被延迟调用。闭包中的代码可以访问位于创建该闭包的作用域内的变量和函数，即便闭包在执行时处于一个不同的作用域下－－你已经在嵌套函数的例子中看到了这样的一种情况。你可以使用花括号）（`{}`）包围一段代码，来创建一个匿名的闭包。使用`in`来分隔参数列表、返回值，与代码本身。
+
+*/
+
+numbers.map({
+    (number: Int) -> Int in
+    let result = 3 * number
+    return result
+})
+
+/*:
+
+> **实验**
+
+重写这个闭包，为所有奇数都返回`0`。
+
+*/
+
+
+
