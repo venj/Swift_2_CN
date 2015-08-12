@@ -24,7 +24,7 @@ Swift是编写iOS，OS X和watchOS应用的一个极好的语言，它将继续�
 
 /*:
 
-## Swift巡礼
+## Swift导览
 
 按照传统，新语言的第一个程序应该是在屏幕上打印出“Hello, world!”。在Swift中，你可以用一行代码来实现：
 
