@@ -163,7 +163,7 @@ print(teamScore)
 
 在`if`语句中，条件语句必须是一个布尔表达式－－这意味着像`if score { ... }`这样的代码是错的，因为它并不会和0进行隐式的比较。
 
-你可以结合使用`if`和`let`来操作可能不包含值的变量。这种值也被称为“可选变量（optional）”。一个可选变量可能包含一个值，或者包含`nil`，以表示值不存在。在变量类型后加上问号（?），可以将其标记为可选变量。
+你可以结合使用`if`和`let`来操作可能不包含值的变量。这种值也被称为“可选类型（optional）变量”。一个可选类型变量可能包含一个值，或者包含`nil`，以表示值不存在。在变量类型后加上问号（?），可以将其标记为可选类型变量。
 
 */
 
@@ -186,7 +186,7 @@ if let name = optionalName {
 
 /*:
 
-如果可选变量的值为`nil`，条件就是`false`，花括号内的语句块就被跳过。否则，可选变量被拆封（unwrapped），并赋值给`let`后面的常量，这使得拆封之后的值可以在语句块内被使用。
+如果可选类型变量的值为`nil`，条件就是`false`，花括号内的语句块就被跳过。否则，可选类型变量的值被拆封（unwrapped），并赋值给`let`后面的常量，这使得拆封之后的值可以在语句块内被使用。
 
 分支语句支持任何类型的数据和各种比较操作－－不限于整数条件和相等性比较。
 
@@ -546,7 +546,128 @@ test.simpleDescription()
 
 /*:
 
-除了简单的存储属性之外，属性也可以有一个设值方法（getter，译者注：getter有时也被部分翻译成get访问器方法，后文的setter也类似）和一个赋值方法（setter）。
+除了简单的存储属性之外，属性也可以有一个取值方法（getter，译者注：getter有时也被部分翻译成get访问器方法，后文的setter也类似）和一个赋值方法（setter）。
+
+*/
+
+class EquilateralTriangle : NamedShape {
+    var sideLength : Double = 0.0
+
+    init(sideLength: Double, name: String) {
+        self.sideLength = sideLength
+        super.init(name: name)
+        numberOfSides = 3
+    }
+
+    var perimeter : Double {
+        get {
+            return 3.0 * sideLength
+        }
+        set {
+            sideLength = newValue / 3.0
+        }
+    }
+
+    override func simpleDescription() -> String {
+        return "An equilateral triangle with side of length \(sideLength)"
+    }
+}
+
+var triangle = EquilateralTriangle(sideLength: 3.1, name: "a triangle")
+print(triangle.perimeter)
+triangle.perimeter = 9.9
+print(triangle.sideLength)
+
+/*:
+
+在`perimeter`的赋值方法（setter）中，新值被隐式地命名为`newValue`。你可以在`set`后面加上括号，在里面显式地设置一个名字。
+
+注意`EquilateralTriangle`类的构造器有3个不同的步骤：
+
+1. 为子类声明的新属性赋值。
+2. 调用亲类的构造器。
+3. 修改在亲类中定义的属性的值。任何额外的调用方法、取值方法（getter）或赋值方法（setter）的设置操作也可以在这里完成。
+
+如果你无需计算属性的值，但是仍然需要在设置新值前后执行一些代码，你可以使用`willSet`和`didSet`方法。例如，下面的这个类保证了等边三角形的边长总是与正方形的边长相等。
+
+*/
+
+class TriangleAndSquare {
+
+    var triangle : EquilateralTriangle {
+        willSet {
+            square.sideLength = newValue.sideLength
+        }
+    }
+
+    var square : Square {
+        willSet {
+            triangle.sideLength = newValue.sideLength
+        }
+    }
+    init(size: Double, name: String) {
+        square = Square(sideLength: size, name: name)
+        triangle = EquilateralTriangle(sideLength: size, name: name)
+    }
+}
+var triangleAndSquare = TriangleAndSquare(size: 10, name: "another test shape")
+print(triangleAndSquare.square.sideLength)
+print(triangleAndSquare.triangle.sideLength)
+triangleAndSquare.square = Square(sideLength: 50, name: "larger square")
+print(triangleAndSquare.triangle.sideLength)
+
+/*:
+
+当你使用可选类型值的时候，你可以在方法、属性和按索引取值（subscription）等操作前使用`?`。如果`?`前的变量的值为`nil`，那么所有`?`之后的代码均被忽略，整个表达式的值也为`nil`。否则，可选类型变量的值被拆封，`?`之后的所有代码将作用于拆封之后的值。无论是哪种情况，整个表达式的值，也属于可选类型。
+
+*/
+
+let optionalSquare : Square? = Square(sideLength: 2.5, name: "optional square")
+let sideLength = optionalSquare?.sideLength
+
+/*:
+
+### 枚举类型和结构体
+
+使用`enum`可以创建一个枚举类型。与类等其他类型相似，枚举类型也可以包含方法。
+
+*/
+
+enum Rank : Int {
+    case Ace = 1
+    case Two, Three, Four, Five, DDix, Seven, Nine, Ten
+    case Jack, Queen, King
+    func simpleDescption() -> String {
+        switch self {
+        case .Ace:
+            return "ace"
+        case .Jack:
+            return "jack"
+        case .Queen:
+            return "queen"
+        case .King:
+            return "queen"
+        default:
+            return String(self.rawValue)
+        }
+    }
+}
+let ace = Rank.Ace
+let aceRawValue = ace.rawValue
+
+/*:
+
+> **实验**
+> 
+> 编写一个方法，比较两个`Rank`类型的值的原始值的大小。
+
+*/
+
+/*:
+
+在上述例子中，枚举类型的原始值的类型是`Int`，因此你只需指定第一个原始值。其他值按顺序被赋于原始值。你也可以使用字符串或浮点数值作为枚举的原始值。使用`rawValue`属性可以访问枚举成员的原始值。
+
+使用`init?(rawValue:)`构造器可以从原始值创建一个枚举类型的实例。
 
 */
 
