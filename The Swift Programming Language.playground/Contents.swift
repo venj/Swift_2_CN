@@ -433,5 +433,121 @@ numbers.map({
 
 */
 
+/*:
+
+我们还可以把闭包写的更简洁。当闭包的类型是已知的时候，例如某个委托（译者注：特别注意，区别于.NET的委托）的回调，你可以忽略参数的类型，返回值的类型，或者把两者都忽略。单行语句的闭包隐式返回该行语句的值。
+
+*/
+
+let mappedNumbers = numbers.map({number in 3 * number})
+print(mappedNumbers)
+
+/*:
+
+你还可以通过序号引用参数，而不使用参数名－－这种方式在非常短的闭包里非常实用。当闭包作为最后一个参数传给函数的时候，闭包可以放到括号外，紧跟着闭括号的位置。当一个闭包是函数的唯一参数的时候，还可以完全省略括号。
+
+*/
+
+let sortedNumbers = numbers.sort { $0 > $1 }
+print(sortedNumbers)
+
+/*:
+
+### 对象和类
+
+使用`class`加上类名，可以创建一个类。类的属性的定义的写法，与定义一个常量或变量的方法一样，唯一的区别是属性是定义在类的上下文环境中的。类似的，方法和函数的定义也是一样的。
+
+*/
+
+class Shape {
+    var numberOfSides = 0
+    func simpleDescription() -> String {
+        return "A shape with \(numberOfSides) sides"
+    }
+}
+
+/*:
+
+> **实验**
+> 
+> 使用`let`关键词，为类增加一个常量属性，另外增加一个接受一个参数的方法。
+
+*/
+
+/*:
+
+在类名后加上括号，创建类的一个实例。使用点语法来访问实例的属性和方法。
+
+*/
+
+var shape = Shape()
+shape.numberOfSides = 7
+var shapeDescription = shape.simpleDescription()
+
+/*:
+
+这个版本的`Shape`类缺少一样至关重要的东西：一个构造器，用于在实例创建的时候设置类。使用`init`可以创建一个构造器。
+
+*/
+
+class NamedShape {
+    var numberOfSides : Int = 0
+    var name : String
+
+    init(name: String) {
+        self.name = name
+    }
+
+    func simpleDescription() -> String {
+        return "A shape with \(numberOfSides) sides."
+    }
+}
+
+/*:
+
+注意这里是如何使用`self`来区分`name`属性和构造器的`name`参数的。当你创建一个类的实例时，构造器的参数传递与函数调用类似。每一个属性都必须赋值－－无论是在声明的时候（例如`numberOfSides`），或者是在构造器中（例如`name`）。
+
+如果你需要在对象的内存被释放之前做一些清理，你可以使用`deinit`来创建一个析构器。
+
+创建子类时，需要将其亲类放在类名后面，并用冒号分隔。创建类的时候无需扩展自一个标准的根类，因此在创建类时，你可以根据需要包含或者忽略亲类。
+
+子类中，覆盖亲类实现的方法需要用`override`标记－－不使用`override`，而“碰巧”覆盖了一个方法，会被编译器侦测到，并且视之为一个错误。编译器也会发现那些标记为`override`而实际上并没有覆盖亲类方法的方法。
+
+*/
+
+class Square : NamedShape {
+    var sideLength : Double
+
+    init(sideLength: Double, name : String) {
+        self.sideLength = sideLength
+        super.init(name: name)
+        numberOfSides = 4
+    }
+
+    func area() -> Double {
+        return sideLength * sideLength
+    }
+
+    override func simpleDescription() -> String {
+        return "A square with sides of length \(sideLength)."
+    }
+}
+let test = Square(sideLength: 5.2, name: "my test square")
+test.area()
+test.simpleDescription()
+
+/*:
+
+> **实验**
+> 
+> 创建另一个`NamedShape`的子类，叫做`Circle`，其构造器接受一个半径和一个名字作为参数。并为`Circle`类实现`area()`方法和`simpleDescription()`方法。
+
+*/
+
+/*:
+
+除了简单的存储属性之外，属性也可以有一个设值方法（getter，译者注：getter有时也被部分翻译成get访问器方法，后文的setter也类似）和一个赋值方法（setter）。
+
+*/
 
 
