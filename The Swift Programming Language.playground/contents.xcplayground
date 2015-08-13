@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<playground version='5.0' target-platform='ios' requires-full-environment='true'>
-    <timeline fileName='timeline.xctimeline'/>
+<playground version='6.0' target-platform='ios' requires-full-environment='true' display-mode='raw'>
+    <pages>
+        <page name='第1章 关于Swift'/>
+        <page name='第2章 Swift导览'/>
+        <page name='第3章 基础知识'/>
+    </pages>
 </playground>
