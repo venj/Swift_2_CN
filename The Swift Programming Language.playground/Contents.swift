@@ -905,4 +905,28 @@ possibleInteger = .Some(100)
 
 */
 
+func anyCommonElements <T, U where T : SequenceType, U : SequenceType, T.Generator.Element : Equatable, T.Generator.Element == U.Generator.Element> (lhs: T, _ rhs: U) -> Bool {
+    for lhsItem in lhs {
+        for rhsItem in rhs {
+            if lhsItem == rhsItem {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+/*:
+
+> **实验**
+>
+> 修改`anyCommonElements(_:_:)`函数，使之成为一个新的函数，能够返回一个包含两个序列相同的元素的数组。
+
+*/
+
+/*:
+
+如果泛型的限定条件比较简单，你可以忽略`whare`关键词，直接在类型名后加上引号，以及协议或类的名字。比如，`<T: Equatable>`和`<T where T: Equatable>`是一样的。
+
+*/
 
